@@ -1,5 +1,9 @@
 {
   "name": "pdf-rechnung",
+  "author": {
+    "name": "Thomas Bielich",
+    "email": "t.bielich@konsumkit.com"
+  },
   "version": "1.0.0",
   "description": "Parse PDF invoices and extract amounts and invoice numbers into dist/invoices.json",
   "main": "index.js",
@@ -11,6 +15,5 @@
   },
   "engines": {
     "node": ">=14"
-  },
-  "license": "MIT"
+  }
 }
