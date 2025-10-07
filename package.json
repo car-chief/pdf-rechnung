@@ -1,0 +1,16 @@
+{
+  "name": "pdf-rechnung",
+  "version": "1.0.0",
+  "description": "Parse PDF invoices and extract amounts and invoice numbers into dist/invoices.json",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "pdf-parse": "^1.1.1"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "license": "MIT"
+}

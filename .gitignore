@@ -1,2 +1,5 @@
 # Ignore the src directory and its contents
+node_modules/
 src/
+.DS_Store
+package-lock.json

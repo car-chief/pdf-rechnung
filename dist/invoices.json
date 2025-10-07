@@ -1,0 +1,45 @@
+{
+  "total": 205.12,
+  "invoices": [
+    {
+      "file": "file-34ae2316-30a4-404d-b502-6f78da449774.pdf",
+      "invoice": "1289175259/08",
+      "amount": 11.49
+    },
+    {
+      "file": "file-87563c3c-af1c-4602-8bf3-e8f58aa21546.pdf",
+      "invoice": "1312470592/08",
+      "amount": 11.49
+    },
+    {
+      "file": "file-8f06c3c4-5be9-41ad-87de-e9e4a3e8f062.pdf",
+      "invoice": "1337513521/08",
+      "amount": 39.71
+    },
+    {
+      "file": "file-b5c84fca-907c-44da-ba75-6b7a648ddcdd.pdf",
+      "invoice": "1241891874/08",
+      "amount": 61.48
+    },
+    {
+      "file": "file-be9118b5-7cd2-477f-bd57-a2a695c58e52.pdf",
+      "invoice": "1196904455/08",
+      "amount": 11.49
+    },
+    {
+      "file": "file-d9d0042a-6103-4536-b3d2-1dd15939a1a2.pdf",
+      "invoice": "1174316041/08",
+      "amount": 11.49
+    },
+    {
+      "file": "file-dfc79f3b-5ef9-4e66-9895-ad20e402f2ac.pdf",
+      "invoice": "1361887884/08",
+      "amount": 46.48
+    },
+    {
+      "file": "file-e98e6d21-bab4-4933-bed4-d0822e1cc3c1.pdf",
+      "invoice": "1219081238/08",
+      "amount": 11.49
+    }
+  ]
+}
