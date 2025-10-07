@@ -29,6 +29,17 @@ function extractInvoiceNumber(text) {
 }
 
 /**
+ * Kürzt einen Dateinamen wie im Finder mit Ellipsen.
+ * Beispiel: file-8f06c3c4-5be9-41ad-87de-e9e4a3e8f062.pdf => file-8f06...f062.pdf
+ */
+function shortenFilename(filename) {
+  const ext = path.extname(filename);
+  const base = path.basename(filename, ext);
+  if (base.length <= 12) return filename;
+  return base.slice(0, 8) + "..." + base.slice(-4) + ext;
+}
+
+/**
  * Hauptfunktion zum Parsen von PDF-Rechnungen aus einem Verzeichnis.
  *
  * - Überprüft, ob das Rechnungs-Verzeichnis existiert und gültig ist.
@@ -83,7 +94,7 @@ async function main() {
       invoices.push({ file, invoice: invoiceNumber, amount });
       console.log(
         "Geparst:",
-        file,
+        shortenFilename(file),
         "=>",
         amount,
         invoiceNumber ? `(${invoiceNumber})` : "(keine Rechnungsnummer)"
@@ -105,8 +116,11 @@ async function main() {
     path.join(outDir, "invoices.json"),
     JSON.stringify(output, null, 2)
   );
+  console.log("------------------------------");
   console.log("Gespeichert:", path.join(outDir, "invoices.json"));
-  console.log("Total amount of all bills:", output.total.toFixed(2));
+  console.log("------------------------------");
+  console.log("Total:", output.total.toFixed(2), "EUR");
+  console.log("==============================");
 }
 
 main();
