@@ -21,17 +21,12 @@ function extractInvoiceNumber(text) {
     if (m && m[1]) return m[1].trim();
   }
 
-  // Fallback: look for "Rechnung" followed by a nearby token that looks like an id
   const fallback = text.match(/rechnung[^\n]{0,30}([A-Z0-9\-\/\.]{3,})/i);
   if (fallback && fallback[1]) return fallback[1].trim();
 
   return null;
 }
 
-/**
- * Kürzt einen Dateinamen wie im Finder mit Ellipsen.
- * Beispiel: file-8f06c3c4-5be9-41ad-87de-e9e4a3e8f062.pdf => file-8f06...f062.pdf
- */
 function shortenFilename(filename) {
   const ext = path.extname(filename);
   const base = path.basename(filename, ext);
@@ -39,31 +34,12 @@ function shortenFilename(filename) {
   return base.slice(0, 8) + "..." + base.slice(-4) + ext;
 }
 
-/**
- * Hauptfunktion zum Parsen von PDF-Rechnungen aus einem Verzeichnis.
- *
- * - Überprüft, ob das Rechnungs-Verzeichnis existiert und gültig ist.
- * - Liest alle PDF-Dateien im Verzeichnis aus.
- * - Extrahiert den Rechnungsbetrag und die Rechnungsnummer aus jeder Datei.
- * - Summiert alle gefundenen Beträge.
- * - Speichert die Ergebnisse als JSON-Datei im "dist"-Ordner.
- * - Gibt Status- und Fehlermeldungen auf der Konsole aus.
- *
- * @async
- * @function
- * @returns {Promise<void>} Gibt ein Promise zurück, das abgeschlossen wird, wenn alle Rechnungen verarbeitet wurden.
- */
-async function main() {
-  if (!fs.existsSync(billsDir) || !fs.statSync(billsDir).isDirectory()) {
-    console.error("src-Ordner nicht gefunden:", billsDir);
-    process.exit(1);
-  }
-
-  const files = fs.readdirSync(billsDir);
+async function parseFolder(folderName, folderPath) {
   const invoices = [];
-
+  let folderTotal = 0;
+  const files = fs.readdirSync(folderPath);
   for (const file of files) {
-    const filePath = path.join(billsDir, file);
+    const filePath = path.join(folderPath, file);
     if (!fs.statSync(filePath).isFile()) continue;
     if (!file.toLowerCase().endsWith(".pdf")) continue;
 
@@ -90,10 +66,10 @@ async function main() {
       }
 
       const invoiceNumber = extractInvoiceNumber(data.text);
-      totalAmount += amount;
+      folderTotal += amount;
       invoices.push({ file, invoice: invoiceNumber, amount });
       console.log(
-        "Geparst:",
+        `[${folderName}]`,
         shortenFilename(file),
         "=>",
         amount,
@@ -103,10 +79,34 @@ async function main() {
       console.warn("Fehler beim Verarbeiten von", file, err.message);
     }
   }
+  return { total: Number(folderTotal.toFixed(2)), invoices };
+}
+
+async function main() {
+  if (!fs.existsSync(billsDir) || !fs.statSync(billsDir).isDirectory()) {
+    console.error("src-Ordner nicht gefunden:", billsDir);
+    process.exit(1);
+  }
+
+  const folders = fs.readdirSync(billsDir).filter((f) => {
+    const p = path.join(billsDir, f);
+    return fs.statSync(p).isDirectory();
+  });
+
+  const outputInvoices = {};
+  let grandTotal = 0;
+  for (const folder of folders) {
+    const folderPath = path.join(billsDir, folder);
+    const result = await parseFolder(folder, folderPath);
+    outputInvoices[folder] = result; // result enthält jetzt total und invoices
+    grandTotal += result.total;
+    console.log(`[${folder}] Total: ${result.total.toFixed(2)} EUR`);
+    console.log("------------------------------");
+  }
 
   const output = {
-    total: Number(totalAmount.toFixed(2)),
-    invoices,
+    total: Number(grandTotal.toFixed(2)),
+    invoices: outputInvoices,
   };
 
   const outDir = path.join(__dirname, "dist");
@@ -116,10 +116,9 @@ async function main() {
     path.join(outDir, "invoices.json"),
     JSON.stringify(output, null, 2)
   );
-  console.log("------------------------------");
   console.log("Gespeichert:", path.join(outDir, "invoices.json"));
   console.log("------------------------------");
-  console.log("Total:", output.total.toFixed(2), "EUR");
+  console.log("Gesamtsumme:", output.total.toFixed(2), "EUR");
   console.log("==============================");
 }
 
