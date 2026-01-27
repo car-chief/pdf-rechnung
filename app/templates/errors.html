@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Fehler beim Parsing{% endblock %}
+
+{% block content %}
+
+<div class="card">
+    <h2>Parsing-Fehler</h2>
+    <p>Es gibt {{ error_count }} Rechnungs-PDF(s) mit Parsing-Fehlern:</p>
+</div>
+
+{% if errors %}
+<div class="card">
+    {% for error in errors %}
+    <div class="error-item">
+        <h4>{{ error.rel_path }}</h4>
+        <p><strong>Fehler:</strong> {{ error.error_message }}</p>
+        <p><strong>Typ:</strong> {{ error.error_type }}</p>
+        <p><strong>Zeitpunkt:</strong> {{ error.timestamp }}</p>
+        <p><strong>Jahr:</strong> {{ error.invoice_year }}</p>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="card">
+    <div class="empty-state">
+        <h3>Keine Fehler</h3>
+        <p>Alle Rechnungen wurden erfolgreich geparst! 🎉</p>
+    </div>
+</div>
+{% endif %}
+
+<div class="card">
+    <a href="/">← Zurück zur Übersicht</a>
+</div>
+
+{% endblock %}

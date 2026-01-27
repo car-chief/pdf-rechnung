@@ -1,2 +1,35 @@
-# Ignore the src directory and its contents
-src/
+# Environment & Virtual Env
+.env
+.venv
+venv/
+env/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Data (local, not tracked)
+data/json/*.json
+data/backups/
+Rechnungen/
+
+# Raw sources (too large, keep only cleaned versions)
+xml/raw/
+
+# Development
+debug_output.txt
+.env.local
